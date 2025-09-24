@@ -163,8 +163,8 @@ switch_to() {
 
     if [ -n "$found_path" ]; then
         echo -e "${GREEN}Switching to: $found_path${NC}"
-        cd "$found_path"
-        exec $SHELL
+        echo "WORKTREE_DIR:$found_path"
+        exit 0
     else
         echo -e "${RED}No worktree found matching: $search_term${NC}"
         return 1

@@ -126,10 +126,12 @@ main() {
     echo -e "  ${BLUE}git push -u origin $BRANCH_NAME${NC}"
     echo -e "  ${BLUE}gh pr create${NC}"
 
-    # Open new shell in the worktree
+    # Stay in the worktree directory
     echo ""
-    echo -e "${YELLOW}Starting new shell in worktree...${NC}"
-    exec $SHELL
+    echo -e "${YELLOW}Workspace ready at: $(pwd)${NC}"
+
+    # Output the directory for the shell function to parse
+    echo "WORKTREE_DIR:$(pwd)"
 }
 
 main "$@"

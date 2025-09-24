@@ -119,9 +119,10 @@ main() {
         read -p "Switch to existing worktree? (y/N): " -n 1 -r
         echo
         if [[ $REPLY =~ ^[Yy]$ ]]; then
-            cd "$existing_worktree"
-            echo -e "${GREEN}✅ Switched to existing worktree${NC}"
-            exec $SHELL
+            echo -e "${GREEN}✅ Switching to existing worktree${NC}"
+            echo -e "${YELLOW}Workspace ready at: $existing_worktree${NC}"
+            echo "WORKTREE_DIR:$existing_worktree"
+            exit 0
         else
             echo -e "${YELLOW}Creating new worktree for same branch...${NC}"
         fi
@@ -191,10 +192,12 @@ main() {
     echo -e "  ${BLUE}git commit -m \"your message\"${NC}"
     echo -e "  ${BLUE}git push${NC}"
 
-    # Open new shell in the worktree
+    # Stay in the worktree directory
     echo ""
-    echo -e "${YELLOW}Starting new shell in worktree...${NC}"
-    exec $SHELL
+    echo -e "${YELLOW}Workspace ready at: $(pwd)${NC}"
+
+    # Output the directory for the shell function to parse
+    echo "WORKTREE_DIR:$(pwd)"
 }
 
 main "$@"

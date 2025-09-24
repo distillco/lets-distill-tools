@@ -12,7 +12,22 @@ source "$SCRIPT_DIR/config.sh"
 
 # Main function to start a new task
 lets-distill() {
-    "$DISTILL_SCRIPTS_DIR/lets-distill.sh" "$@"
+    # Run the script and capture the output directory
+    output=$("$DISTILL_SCRIPTS_DIR/lets-distill.sh" "$@")
+    exit_code=$?
+
+    # Print the output
+    echo "$output"
+
+    # If successful, extract the directory path and cd to it
+    if [ $exit_code -eq 0 ]; then
+        worktree_dir=$(echo "$output" | grep "^WORKTREE_DIR:" | cut -d: -f2-)
+        if [ -n "$worktree_dir" ]; then
+            cd "$worktree_dir"
+        fi
+    fi
+
+    return $exit_code
 }
 
 # Alias for quick task creation
@@ -20,7 +35,27 @@ alias ld='lets-distill'
 
 # List all active tasks/worktrees
 distill-tasks() {
-    "$DISTILL_SCRIPTS_DIR/distill-tasks.sh" "$@"
+    # Special handling for switch command
+    if [ "$1" = "switch" ] || [ "$1" = "sw" ]; then
+        output=$("$DISTILL_SCRIPTS_DIR/distill-tasks.sh" "$@")
+        exit_code=$?
+
+        # Print the output
+        echo "$output"
+
+        # If successful, extract the directory path and cd to it
+        if [ $exit_code -eq 0 ]; then
+            worktree_dir=$(echo "$output" | grep "^WORKTREE_DIR:" | cut -d: -f2-)
+            if [ -n "$worktree_dir" ]; then
+                cd "$worktree_dir"
+            fi
+        fi
+
+        return $exit_code
+    else
+        # For other commands, just run normally
+        "$DISTILL_SCRIPTS_DIR/distill-tasks.sh" "$@"
+    fi
 }
 
 # Short aliases
@@ -47,7 +82,22 @@ alias dm='distill-main'
 
 # Function to checkout existing branch
 checkout-branch() {
-    "$DISTILL_SCRIPTS_DIR/checkout-distill.sh" "$@"
+    # Run the script and capture the output directory
+    output=$("$DISTILL_SCRIPTS_DIR/checkout-distill.sh" "$@")
+    exit_code=$?
+
+    # Print the output
+    echo "$output"
+
+    # If successful, extract the directory path and cd to it
+    if [ $exit_code -eq 0 ]; then
+        worktree_dir=$(echo "$output" | grep "^WORKTREE_DIR:" | cut -d: -f2-)
+        if [ -n "$worktree_dir" ]; then
+            cd "$worktree_dir"
+        fi
+    fi
+
+    return $exit_code
 }
 
 # Short alias for checkout

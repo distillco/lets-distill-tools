@@ -4,8 +4,8 @@
 # Add this to your ~/.bashrc or ~/.zshrc:
 # source ~/workspace/lets-distill-tools/distill-aliases.sh
 
-# Get the directory where this script is located
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Set the lets-distill tools directory explicitly
+SCRIPT_DIR="$HOME/workspace/lets-distill-tools"
 
 # Load configuration
 source "$SCRIPT_DIR/config.sh"

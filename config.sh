@@ -3,8 +3,8 @@
 # Configuration for lets-distill tools
 # Edit these values to match your setup
 
-# Main repository location
-export LETS_DISTILL_REPO_BASE="${LETS_DISTILL_REPO_BASE:-$HOME/workspace/triple-distill}"
+# Main repository location (the repo you're managing tasks for)
+export DISTILL_REPO_BASE="${DISTILL_REPO_BASE:-$HOME/workspace/triple-distill}"
 
 # Where to create worktrees
 export LETS_DISTILL_WORKTREE_BASE="${LETS_DISTILL_WORKTREE_BASE:-$HOME/workspace/lets-distill}"

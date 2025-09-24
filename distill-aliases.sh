@@ -5,10 +5,13 @@
 # source ~/workspace/lets-distill-tools/distill-aliases.sh
 
 # Set the lets-distill tools directory explicitly
-SCRIPT_DIR="$HOME/workspace/lets-distill-tools"
+LETS_DISTILL_DIR="$HOME/workspace/lets-distill-tools"
 
-# Load configuration
-source "$SCRIPT_DIR/config.sh"
+# Load configuration directly
+export DISTILL_REPO_BASE="${DISTILL_REPO_BASE:-$HOME/workspace/triple-distill}"
+export LETS_DISTILL_WORKTREE_BASE="${LETS_DISTILL_WORKTREE_BASE:-$HOME/workspace/lets-distill}"
+export LETS_DISTILL_HISTORY_FILE="${LETS_DISTILL_HISTORY_FILE:-$HOME/.lets-distill-history}"
+export LETS_DISTILL_MAIN_BRANCH="${LETS_DISTILL_MAIN_BRANCH:-main}"
 
 # Main function to start a new task
 lets-distill() {

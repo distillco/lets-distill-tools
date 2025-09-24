@@ -13,6 +13,14 @@ export LETS_DISTILL_WORKTREE_BASE="${LETS_DISTILL_WORKTREE_BASE:-$HOME/workspace
 export LETS_DISTILL_HISTORY_FILE="${LETS_DISTILL_HISTORY_FILE:-$HOME/.lets-distill-history}"
 export LETS_DISTILL_MAIN_BRANCH="${LETS_DISTILL_MAIN_BRANCH:-main}"
 
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
 # Main function to start a new task
 lets-distill() {
     # Run the script and capture the output directory
@@ -72,9 +80,10 @@ distill-clean() {
     "$LETS_DISTILL_DIR/distill-clean.sh" "$@"
 }
 
-# Short alias
+# Short aliases
 alias dc='distill-clean'
 alias dcm='distill-clean --merged'
+alias dcs='distill-clean --status'
 
 # Quick function to jump to the main repo
 distill-main() {
@@ -114,7 +123,73 @@ review-pr() {
     fi
 
     local pr_num="$1"
-    lets-distill "review-pr-$pr_num"
+
+    # Try to fetch PR details via gh CLI
+    local pr_title=""
+    local pr_status=""
+    local pr_branch=""
+
+    if command -v gh >/dev/null 2>&1; then
+        echo -e "${BLUE}🔍 Fetching PR #$pr_num details...${NC}"
+
+        # Change to the main repo to run gh commands
+        local current_dir=$(pwd)
+        cd "$DISTILL_REPO_BASE" 2>/dev/null || cd "$current_dir"
+
+        # Get PR details
+        pr_title=$(gh pr view "$pr_num" --json title -q .title 2>/dev/null || echo "")
+        pr_status=$(gh pr view "$pr_num" --json state -q .state 2>/dev/null || echo "")
+        pr_branch=$(gh pr view "$pr_num" --json headRefName -q .headRefName 2>/dev/null || echo "")
+        pr_url=$(gh pr view "$pr_num" --json url -q .url 2>/dev/null || echo "")
+
+        cd "$current_dir"
+
+        if [ -n "$pr_title" ]; then
+            echo -e "${GREEN}📋 Found PR: $pr_title${NC}"
+            echo -e "${BLUE}📊 Status: $pr_status${NC}"
+            if [ -n "$pr_branch" ]; then
+                echo -e "${BLUE}🌿 Branch: $pr_branch${NC}"
+            fi
+        else
+            echo -e "${YELLOW}⚠️  Could not fetch PR details (may not exist or no access)${NC}"
+        fi
+        echo ""
+    fi
+
+    # Create the task workspace
+    output=$(lets-distill "review-pr-$pr_num")
+    exit_code=$?
+
+    # Print the output
+    echo "$output"
+
+    # If successful, add PR details to task info
+    if [ $exit_code -eq 0 ]; then
+        worktree_dir=$(echo "$output" | grep "^WORKTREE_DIR:" | cut -d: -f2-)
+        if [ -n "$worktree_dir" ] && [ -f "$worktree_dir/.task-info" ]; then
+            if [ -n "$pr_title" ]; then
+                echo "" >> "$worktree_dir/.task-info"
+                echo "## PR Details:" >> "$worktree_dir/.task-info"
+                echo "- **Title:** $pr_title" >> "$worktree_dir/.task-info"
+                echo "- **Status:** $pr_status" >> "$worktree_dir/.task-info"
+                echo "- **PR Number:** #$pr_num" >> "$worktree_dir/.task-info"
+                if [ -n "$pr_url" ]; then
+                    echo "- **URL:** $pr_url" >> "$worktree_dir/.task-info"
+                fi
+                if [ -n "$pr_branch" ]; then
+                    echo "- **Source Branch:** $pr_branch" >> "$worktree_dir/.task-info"
+                fi
+                echo "- **Fetched:** $(date)" >> "$worktree_dir/.task-info"
+            fi
+        fi
+
+        # Change to the worktree directory
+        if [ -n "$worktree_dir" ]; then
+            cd "$worktree_dir"
+        fi
+    fi
+
+    return $exit_code
 }
 
 # Function to quickly create a fix workspace

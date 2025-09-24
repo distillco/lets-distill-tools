@@ -13,40 +13,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/config.sh"
 
 # Use config variables
-WORKTREE_BASE="$DISTILL_WORKTREE_BASE"
-HISTORY_FILE="$DISTILL_HISTORY_FILE"
-REPO_BASE="$DISTILL_REPO_BASE"
-# Load configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/config.sh"
-
-# Use config variables
-WORKTREE_BASE="$DISTILL_WORKTREE_BASE"
-HISTORY_FILE="$DISTILL_HISTORY_FILE"
-REPO_BASE="$DISTILL_REPO_BASE"
-# Load configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/config.sh"
-
-# Use config variables
-WORKTREE_BASE="$DISTILL_WORKTREE_BASE"
-HISTORY_FILE="$DISTILL_HISTORY_FILE"
-REPO_BASE="$DISTILL_REPO_BASE"
-# Load configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/config.sh"
-
-# Use config variables
-WORKTREE_BASE="$DISTILL_WORKTREE_BASE"
-HISTORY_FILE="$DISTILL_HISTORY_FILE"
-REPO_BASE="$DISTILL_REPO_BASE"
-# Load configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/config.sh"
-
-# Use config variables
-WORKTREE_BASE="$DISTILL_WORKTREE_BASE"
-HISTORY_FILE="$DISTILL_HISTORY_FILE"
+WORKTREE_BASE="$LETS_DISTILL_WORKTREE_BASE"
+HISTORY_FILE="$LETS_DISTILL_HISTORY_FILE"
 REPO_BASE="$DISTILL_REPO_BASE"
 
 # Function to display active worktrees
@@ -65,6 +33,9 @@ show_worktrees() {
         exit 1
     fi
 
+    # Clean up any orphaned worktrees first
+    git worktree prune 2>/dev/null || true
+
     # Get worktrees that match our pattern
     while IFS= read -r line; do
         if [[ $line == *"lets-distill"* ]]; then
@@ -78,22 +49,40 @@ show_worktrees() {
                     task_name=$(grep "^# Task:" "$path/.task-info" 2>/dev/null | sed 's/# Task: //' || echo "Unknown")
                     created=$(grep "^Created:" "$path/.task-info" 2>/dev/null | sed 's/Created: //' || echo "Unknown")
 
-                    # Get directory size
-                    size=$(du -sh "$path" 2>/dev/null | cut -f1 || echo "?")
-
-                    # Get last commit info
-                    last_commit=""
-                    if cd "$path" 2>/dev/null; then
-                        last_commit=$(git log -1 --format="%h %s" 2>/dev/null || echo "No commits")
-                        cd - > /dev/null
-                    fi
+                    # Check if this is a PR review task
+                    pr_title=$(grep "^- \*\*Title:\*\*" "$path/.task-info" 2>/dev/null | sed 's/^- \*\*Title:\*\* //' || echo "")
+                    pr_status=$(grep "^- \*\*Status:\*\*" "$path/.task-info" 2>/dev/null | sed 's/^- \*\*Status:\*\* //' || echo "")
+                    pr_number=$(grep "^- \*\*PR Number:\*\*" "$path/.task-info" 2>/dev/null | sed 's/^- \*\*PR Number:\*\* //' || echo "")
+                    pr_url=$(grep "^- \*\*URL:\*\*" "$path/.task-info" 2>/dev/null | sed 's/^- \*\*URL:\*\* //' || echo "")
 
                     echo -e "${GREEN}📂 $task_name${NC}"
                     echo -e "   ${BLUE}Branch:${NC} $branch"
                     echo -e "   ${BLUE}Path:${NC} $path"
                     echo -e "   ${BLUE}Created:${NC} $created"
-                    echo -e "   ${BLUE}Size:${NC} $size"
-                    echo -e "   ${BLUE}Last commit:${NC} $last_commit"
+
+                    # Display PR info if available
+                    if [ -n "$pr_title" ] && [ -n "$pr_number" ]; then
+                        echo -e "   ${CYAN}PR:${NC} $pr_number - $pr_title"
+                        if [ -n "$pr_status" ]; then
+                            case "$pr_status" in
+                                "OPEN")
+                                    echo -e "   ${YELLOW}Status:${NC} 🟡 Open"
+                                    ;;
+                                "MERGED")
+                                    echo -e "   ${GREEN}Status:${NC} ✅ Merged"
+                                    ;;
+                                "CLOSED")
+                                    echo -e "   ${RED}Status:${NC} ❌ Closed"
+                                    ;;
+                                *)
+                                    echo -e "   ${BLUE}Status:${NC} $pr_status"
+                                    ;;
+                            esac
+                        fi
+                        if [ -n "$pr_url" ]; then
+                            echo -e "   ${BLUE}URL:${NC} $pr_url"
+                        fi
+                    fi
                 else
                     echo -e "${GREEN}📂 $(basename "$path")${NC}"
                     echo -e "   ${BLUE}Branch:${NC} $branch"

@@ -5,7 +5,7 @@
 # source ~/workspace/lets-distill-tools/distill-aliases.sh
 
 # Set the lets-distill tools directory explicitly
-LETS_DISTILL_DIR="$HOME/workspace/lets-distill-tools"
+export LETS_DISTILL_DIR="$HOME/workspace/lets-distill-tools"
 
 # Load configuration directly
 export DISTILL_REPO_BASE="${DISTILL_REPO_BASE:-$HOME/workspace/triple-distill}"

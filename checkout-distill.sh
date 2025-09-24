@@ -13,42 +13,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/config.sh"
 
 # Use config variables
-WORKTREE_BASE="$DISTILL_WORKTREE_BASE"
-HISTORY_FILE="$DISTILL_HISTORY_FILE"
+WORKTREE_BASE="$LETS_DISTILL_WORKTREE_BASE"
+HISTORY_FILE="$LETS_DISTILL_HISTORY_FILE"
 REPO_BASE="$DISTILL_REPO_BASE"
-MAIN_BRANCH="$DISTILL_MAIN_BRANCH"# Load configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/config.sh"
+MAIN_BRANCH="$LETS_DISTILL_MAIN_BRANCH"
 
-# Use config variables
-WORKTREE_BASE="$DISTILL_WORKTREE_BASE"
-HISTORY_FILE="$DISTILL_HISTORY_FILE"
-REPO_BASE="$DISTILL_REPO_BASE"
-MAIN_BRANCH="$DISTILL_MAIN_BRANCH"# Load configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/config.sh"
-
-# Use config variables
-WORKTREE_BASE="$DISTILL_WORKTREE_BASE"
-HISTORY_FILE="$DISTILL_HISTORY_FILE"
-REPO_BASE="$DISTILL_REPO_BASE"
-MAIN_BRANCH="$DISTILL_MAIN_BRANCH"# Load configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/config.sh"
-
-# Use config variables
-WORKTREE_BASE="$DISTILL_WORKTREE_BASE"
-HISTORY_FILE="$DISTILL_HISTORY_FILE"
-REPO_BASE="$DISTILL_REPO_BASE"
-MAIN_BRANCH="$DISTILL_MAIN_BRANCH"# Load configuration
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/config.sh"
-
-# Use config variables
-WORKTREE_BASE="$DISTILL_WORKTREE_BASE"
-HISTORY_FILE="$DISTILL_HISTORY_FILE"
-REPO_BASE="$DISTILL_REPO_BASE"
-MAIN_BRANCH="$DISTILL_MAIN_BRANCH"# Function to log task to history
+# Function to log task to history
 log_task() {
     local task_name="$1"
     local branch_name="$2"
@@ -191,10 +161,6 @@ main() {
     echo -e "  ${BLUE}git add .${NC}"
     echo -e "  ${BLUE}git commit -m \"your message\"${NC}"
     echo -e "  ${BLUE}git push${NC}"
-
-    # Stay in the worktree directory
-    echo ""
-    echo -e "${YELLOW}Workspace ready at: $(pwd)${NC}"
 
     # Output the directory for the shell function to parse
     echo "WORKTREE_DIR:$(pwd)"

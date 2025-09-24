@@ -125,7 +125,7 @@ show_history() {
 switch_to() {
     if [ $# -eq 0 ]; then
         echo -e "${RED}Error: Please provide a task name or branch name${NC}"
-        echo "Usage: $0 switch <name>"
+        echo "Usage: distill-tasks switch <name>"
         return 1
     fi
 
@@ -207,7 +207,7 @@ main() {
             ;;
         *)
             echo -e "${RED}Unknown command: $1${NC}"
-            echo "Use: $0 [list|history|switch|clean]"
+            echo "Use: distill-tasks [list|history|switch|clean]"
             exit 1
             ;;
     esac

@@ -61,10 +61,10 @@ log_task() {
 main() {
     if [ $# -eq 0 ]; then
         echo -e "${RED}Error: Please provide a branch name${NC}"
-        echo "Usage: $0 <branch-name>"
+        echo "Usage: checkout-branch <branch-name>"
         echo ""
-        echo "Example: $0 improve-sentry-filtering-matchers"
-        echo "         $0 feature/add-dark-mode"
+        echo "Example: co improve-sentry-filtering-matchers"
+        echo "         checkout-branch feature/add-dark-mode"
         exit 1
     fi
 

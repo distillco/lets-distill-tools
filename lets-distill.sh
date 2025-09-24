@@ -36,10 +36,11 @@ log_task() {
 main() {
     if [ $# -eq 0 ]; then
         echo -e "${RED}Error: Please provide a task description${NC}"
-        echo "Usage: $0 <task-description>"
+        echo "Usage: lets-distill <task-description>"
         echo ""
-        echo "Example: $0 fix-auth-bug"
-        echo "         $0 review-pr-1234"
+        echo "Example: lets-distill fix-auth-bug"
+        echo "         lets-distill review-pr-1234"
+        echo "         ld existing-branch-name"
         exit 1
     fi
 

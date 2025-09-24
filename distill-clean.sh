@@ -269,7 +269,7 @@ main() {
                 fi
                 ;;
             --help|-h)
-                echo "Usage: $0 [OPTIONS]"
+                echo "Usage: distill-clean [OPTIONS]"
                 echo ""
                 echo "Options:"
                 echo "  (no args)    Interactive cleanup"
@@ -280,7 +280,7 @@ main() {
                 ;;
             *)
                 echo -e "${RED}Unknown option: $1${NC}"
-                echo "Use: $0 --help for options"
+                echo "Use: distill-clean --help for options"
                 exit 1
                 ;;
         esac

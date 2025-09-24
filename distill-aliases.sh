@@ -13,7 +13,7 @@ source "$SCRIPT_DIR/config.sh"
 # Main function to start a new task
 lets-distill() {
     # Run the script and capture the output directory
-    output=$("$DISTILL_SCRIPTS_DIR/lets-distill.sh" "$@")
+    output=$("$LETS_DISTILL_DIR/lets-distill.sh" "$@")
     exit_code=$?
 
     # Print the output
@@ -37,7 +37,7 @@ alias ld='lets-distill'
 distill-tasks() {
     # Special handling for switch command
     if [ "$1" = "switch" ] || [ "$1" = "sw" ]; then
-        output=$("$DISTILL_SCRIPTS_DIR/distill-tasks.sh" "$@")
+        output=$("$LETS_DISTILL_DIR/distill-tasks.sh" "$@")
         exit_code=$?
 
         # Print the output
@@ -54,7 +54,7 @@ distill-tasks() {
         return $exit_code
     else
         # For other commands, just run normally
-        "$DISTILL_SCRIPTS_DIR/distill-tasks.sh" "$@"
+        "$LETS_DISTILL_DIR/distill-tasks.sh" "$@"
     fi
 }
 
@@ -66,7 +66,7 @@ alias dts='distill-tasks switch'
 
 # Clean up old worktrees
 distill-clean() {
-    "$DISTILL_SCRIPTS_DIR/distill-clean.sh" "$@"
+    "$LETS_DISTILL_DIR/distill-clean.sh" "$@"
 }
 
 # Short alias
@@ -83,7 +83,7 @@ alias dm='distill-main'
 # Function to checkout existing branch
 checkout-branch() {
     # Run the script and capture the output directory
-    output=$("$DISTILL_SCRIPTS_DIR/checkout-distill.sh" "$@")
+    output=$("$LETS_DISTILL_DIR/checkout-distill.sh" "$@")
     exit_code=$?
 
     # Print the output
